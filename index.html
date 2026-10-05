@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KernelLab: elige tu kernel</title>
+<link rel="stylesheet" href="css/home.css">
+</head>
+<body>
+<main class="home">
+  <h1>¿Qué kernel quieres explorar?</h1>
+  <p class="sub">KernelLab simula cómo los cambios de configuración afectan al arranque, la seguridad y el rendimiento. Elige un sistema para empezar.</p>
+  <div class="choices">
+    <a class="choice linux" href="linux.html">
+      <span class="ico">🐧</span>
+      <h2>Kernel de Linux</h2>
+      <p>Monolítico con módulos y de código abierto. Se configura al compilarlo con opciones <code>CONFIG_*</code>.</p>
+      <span class="go">Abrir laboratorio de Linux →</span>
+    </a>
+    <a class="choice windows" href="windows.html">
+      <span class="ico"><svg viewBox="0 0 24 24" width="52" height="52" aria-hidden="true"><path fill="currentColor" d="M2 4.5 10.5 3.3V11H2zM11.5 3.2 22 1.7V11H11.5zM2 12h8.5v7.8L2 18.6zM11.5 12H22v10.3l-10.5-1.5z"/></svg></span>
+      <h2>Kernel de Windows</h2>
+      <p>Kernel híbrido NT y propietario. Se ajusta con <code>bcdedit</code>, el registro y las características del sistema.</p>
+      <span class="go">Abrir laboratorio de Windows →</span>
+    </a>
+  </div>
+  <table>
+    <thead><tr><th></th><th>Linux</th><th>Windows</th></tr></thead>
+    <tbody>
+      <tr><td>Tipo de kernel</td><td>Monolítico con módulos</td><td>Híbrido (NT)</td></tr>
+      <tr><td>Código</td><td>Abierto (GPL)</td><td>Propietario</td></tr>
+      <tr><td>Se configura con</td><td>.config y compilación</td><td>bcdedit, registro y características</td></tr>
+      <tr><td>Opciones simuladas</td><td>35</td><td>31</td></tr>
+    </tbody>
+  </table>
+  <p class="foot">Simulaciones educativas con valores conceptuales: no modifican tu sistema.</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KernelLab: laboratorio visual del kernel de Linux</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="logo">🐧 <b>KernelLab</b></div>
+  <nav class="nav"><a href="index.html">← Elegir kernel</a><a href="#lab">Laboratorio</a><a href="#grafo">Dependencias</a><a href="#registro">Registro</a><a href="#conceptos">Conceptos</a></nav>
+</header>
+<section class="hero">
+  <div>
+    <h1>Explora qué ocurre dentro de un kernel Linux.</h1>
+    <p>Activa y desactiva opciones reales de <code>.config</code>, observa cómo se propagan las dependencias y comprueba si tu sistema llega a arrancar.</p>
+    <div class="cta"><a class="btn primary" href="#lab">Abrir laboratorio</a><a class="btn" href="#grafo">Ver dependencias</a></div>
+    <p class="note">Es una simulación: no modifica tu sistema operativo.</p>
+  </div>
+  <div class="orbit" aria-hidden="true">
+    <div class="ring"></div><div class="ring r2"></div><div class="ring core">LINUX<br>KERNEL</div>
+    <div class="sat" style="--c:#4cc9f0;--d:0s"><b><i>CPU</i></b></div>
+    <div class="sat" style="--c:#c77dff;--d:-7s"><b><i>RAM</i></b></div>
+    <div class="sat" style="--c:#7ee0b0;--d:-14s"><b><i>NET</i></b></div>
+    <div class="sat" style="--c:#6ea8ff;--d:-21s"><b><i>DISK</i></b></div>
+  </div>
+</section>
+<section id="lab">
+  <div class="toolbar">
+    <div class="tb"><label class="distro" for="distro">Distribución <select id="distro"></select></label><div class="presets" id="presets"></div></div>
+    <div class="actions">
+      <button id="boot" class="primary">▶ Simular arranque</button>
+      <button id="export">⬇ Exportar .config</button>
+      <button id="reset">↺ Reiniciar</button>
+      <label class="btn" for="imp">⬆ Importar .config</label><input id="imp" type="file" hidden>
+    </div>
+  </div>
+  <main>
+    <aside>
+      <input id="q" type="search" placeholder="Buscar opción, por ejemplo KVM o red">
+      <nav id="cats"></nav>
+      <div id="opts"></div>
+    </aside>
+    <section id="center">
+      <h2>Anatomía del kernel</h2>
+      <p class="hint">Pulsa un bloque para filtrar sus opciones y ver qué hace.</p>
+      <div id="arch"></div>
+      <div id="info"></div>
+      <div id="meters"></div>
+    </section>
+    <section id="right">
+      <h2>Veredicto</h2>
+      <div id="verdict"></div>
+      <h2>Cambios</h2>
+      <div id="diff"></div>
+      <h2>Consola</h2>
+      <div id="prog"><i></i></div>
+      <div id="bootmsg" hidden></div>
+      <div id="dbstatus" hidden></div>
+      <pre id="log"></pre>
+    </section>
+  </main>
+</section>
+<section id="grafo" class="band">
+  <h2>Cómo se propaga un cambio</h2>
+  <p class="hint">Las flechas salen del subsistema que has modificado y apuntan a los que se ven afectados; los puntos marcan el sentido del flujo. En rojo, rutas que parten de una opción crítica apagada.</p>
+  <div class="gwrap">
+    <div id="graph"></div>
+    <div><button id="gpause" type="button">⏸ Pausar animación</button><div id="gcount"></div><div id="gpaths"></div></div>
+  </div>
+</section>
+<section id="registro" class="band">
+  <h2>Registro de arranques</h2>
+  <p class="hint">Cada «Simular arranque» se guarda en MySQL a través de un servlet de Jakarta EE, con su resultado y sus errores.</p>
+  <div id="stats"></div>
+  <div id="history"></div>
+</section>
+<section id="conceptos" class="light">
+  <h2>Qué estás modificando realmente</h2>
+  <div id="concepts"></div>
+</section>
+<footer>Proyecto educativo en HTML, CSS y JavaScript. Los valores son una representación conceptual.</footer>
+<script src="js/data.js"></script>
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
