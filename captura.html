@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Datos del Jugador</title>
+    <style>
+        body { font-family: system-ui, sans-serif; background: #f2f4f8; margin: 0; padding: 2rem; }
+        .card { max-width: 480px; margin: 0 auto; background: #ffff44; padding: 1.5rem 2rem; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.1); }
+        h1 { margin-top: 0; font-size: 1.5rem; text-align: center; }
+        label { display: block; margin-top: 1rem; font-weight: 600; }
+        input { width: 100%; padding: .5rem; background: #fff; margin-top: .25rem; box-sizing: border-box; border: 1px solid #bbb; border-radius: 6px; }
+        input:invalid:not(:placeholder-shown) { border-color: #c0392b; }
+        small { color: #333; font-weight: normal; }
+        .error-js { color: #c0392b; font-size: .9rem; margin-top: .25rem; min-height: 1.1em; }
+        fieldset { margin-top: 1rem; border: 1px solid #555; border-radius: 6px; }
+        legend { font-weight: 600; padding: 0 .25rem; }
+        label.inline { display: inline-block; font-weight: normal; margin: .25rem 1rem .25rem 0; }
+        label.inline input { width: auto; margin-right: .25rem; }
+        #vista { display: block; max-width: 96px; max-height: 96px; margin-top: .5rem; border: 1px solid #555; background: #fff; }
+        #vista[hidden] { display: none; }
+        button.sec { background: #444; margin-left: .5rem; }
+        .enlace { text-align: center; margin: 1.25rem 0 0; }
+        button { margin-top: 1.5rem; padding: .6rem 1.2rem; border: 0; border-radius: 6px; background: #2d6cdf; color: #fff; font-size: 1rem; cursor: pointer; }
+        button:hover { background: #1f55b8; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>Datos del Jugador</h1>
+
+    <!-- enctype="multipart/form-data" is required for file uploads -->
+    <form id="formJugador" action="index.php" method="post" enctype="multipart/form-data" novalidate>
+
+        <label for="nombre">Nombre
+            <input type="text" id="nombre" name="nombre" required minlength="2" maxlength="50"
+                   pattern="[\p{L}\p{M}\s'.\-]{2,50}" placeholder=" ">
+        </label>
+
+        <label for="alias">Alias
+            <input type="text" id="alias" name="alias" required minlength="2" maxlength="20"
+                   pattern="[\p{L}\p{N}_.\- ]{2,20}" placeholder=" ">
+        </label>
+
+        <label for="edad">Edad
+            <input type="number" id="edad" name="edad" required min="5" max="120" step="1" placeholder=" ">
+        </label>
+
+        <label for="email">Email
+            <input type="email" id="email" name="email" required maxlength="100" placeholder=" ">
+        </label>
+
+        <label for="juego_favorito">Juego favorito
+            <input type="text" id="juego_favorito" name="juego_favorito" required minlength="2" maxlength="50" placeholder=" ">
+        </label>
+
+        <fieldset>
+            <legend>Armas seleccionadas</legend>
+            <label class="inline"><input type="checkbox" name="armas[]" value="Maza"> Maza</label>
+            <label class="inline"><input type="checkbox" name="armas[]" value="Martillo"> Martillo</label>
+            <label class="inline"><input type="checkbox" name="armas[]" value="Espada"> Espada</label>
+            <label class="inline"><input type="checkbox" name="armas[]" value="Arco"> Arco</label>
+        </fieldset>
+
+        <fieldset>
+            <legend>¿Practica artes mágicas?</legend>
+            <label class="inline"><input type="radio" name="artes_magicas" value="si" required> Sí</label>
+            <label class="inline"><input type="radio" name="artes_magicas" value="no" required> No</label>
+        </fieldset>
+
+        <!-- Must come BEFORE the file input; advisory limit of 10 KB -->
+        <input type="hidden" name="MAX_FILE_SIZE" value="10240">
+        <label for="imagen">Imagen <small>(opcional, solo PNG, máx. 10 KB)</small>
+            <input type="file" id="imagen" name="imagen" accept="image/png,.png">
+        </label>
+        <div class="error-js" id="errorImagen"></div>
+        <small id="infoImagen"></small>
+        <img id="vista" alt="Vista previa de la imagen" hidden>
+
+        <button type="submit">Enviar</button>
+        <button type="reset" class="sec">Limpiar</button>
+    </form>
+    <p class="enlace"><a href="index.php?lista=1">Ver jugadores registrados</a></p>
+</div>
+
+<script>
+    const MAX_BYTES = 10 * 1024; // 10 KB
+    const form = document.getElementById('formJugador');
+    const inputImagen = document.getElementById('imagen');
+    const errorImagen = document.getElementById('errorImagen');
+
+    // Returns an error message, or '' if the image is OK (or absent)
+    function validarImagen() {
+        const file = inputImagen.files[0];
+        if (!file) return '';
+        const esPng = file.type === 'image/png' && file.name.toLowerCase().endsWith('.png');
+        if (!esPng) return 'Solo se permiten imágenes PNG.';
+        if (file.size > MAX_BYTES) return 'La imagen supera el máximo de 10 KB.';
+        return '';
+    }
+
+    const vista = document.getElementById('vista');
+    const info = document.getElementById('infoImagen');
+
+    function quitarVista() {
+        if (vista.src) URL.revokeObjectURL(vista.src);
+        vista.removeAttribute('src');
+        vista.hidden = true;
+        info.textContent = '';
+    }
+
+    inputImagen.addEventListener('change', () => {
+        const msg = validarImagen();
+        errorImagen.textContent = msg;
+        inputImagen.setCustomValidity(msg);
+        quitarVista();
+        const file = inputImagen.files[0];
+        if (file && !msg) {            // valid PNG: show preview + size
+            vista.src = URL.createObjectURL(file);
+            vista.hidden = false;
+            info.textContent = file.name + ' (' + (file.size / 1024).toFixed(1) + ' KB)';
+        }
+    });
+
+    form.addEventListener('reset', () => {
+        errorImagen.textContent = '';
+        inputImagen.setCustomValidity('');
+        quitarVista();
+    });
+
+    form.addEventListener('submit', (e) => {
+        const msg = validarImagen();
+        errorImagen.textContent = msg;
+        inputImagen.setCustomValidity(msg);
+        // checkValidity() applies required, pattern, min/max, email, etc.
+        if (!form.checkValidity()) {
+            e.preventDefault();
+            form.reportValidity();
+        }
+    });
+</script>
+</body>
+</html>
